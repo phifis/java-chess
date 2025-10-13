@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.io.File;
 
 public class SpriteManager {
     private final Map<String, ImageIcon> sprites = new HashMap<>();
