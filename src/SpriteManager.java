@@ -3,6 +3,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.io.File;
 
 public class SpriteManager {
     private final Map<String, ImageIcon> sprites = new HashMap<>();
@@ -25,10 +26,11 @@ public class SpriteManager {
 //                System.out.println("name: " + "/assets/" + name + ".png");
 //                System.out.println("getClass().getResource(\"/assets/\" + name + \".png\") = " + getClass().getResource("/assets/" + name + ".png"));
 
-                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/assets/" + name + ".png")));
+                ImageIcon icon = new ImageIcon("res/assets/" + name + ".png");
+
+
                 Image scaled = icon.getImage().getScaledInstance(scaling, scaling, Image.SCALE_AREA_AVERAGING);
                 sprites.put(name, new ImageIcon(scaled));
-
             }
         }
     }
