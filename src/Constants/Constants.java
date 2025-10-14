@@ -9,4 +9,8 @@ public class Constants {
 
     public static int squareLength;
     public static Dimension windowDimension;
+
+    public static int[] PointToGrid(Point p) {
+        return new int[]{p.y / squareLength, p.x / squareLength};
+    }
 }

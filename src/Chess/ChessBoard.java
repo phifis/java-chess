@@ -1,27 +1,35 @@
 package Chess;
 
-import javax.swing.*;
-import java.awt.*;
-
+import Constants.Constants;
 import FileIO.SpriteManager;
 import Pieces.*;
-import Constants.Constants;
 
-public class ChessBoard extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+public class ChessBoard extends JPanel implements MouseListener, MouseMotionListener {
     Dimension boardSize;
 
     Piece[][] boardLayout = new Piece[8][8];
+    Piece activeDragNDropPiece;
+    boolean activeDragNDrop = false;
 
     SpriteManager spriteManager;
 
     public ChessBoard(Dimension windowDimension) {
 
         Constants.squareLength = windowDimension.height / 8;
-        spriteManager = new SpriteManager((int)(0.8 * Constants.squareLength));
+        spriteManager = new SpriteManager((int) (0.8 * Constants.squareLength));
         boardSize = new Dimension(windowDimension.height, windowDimension.height);
 
         setPreferredSize(boardSize);
         initBoard();
+
+        addMouseListener(this);
+        addMouseMotionListener(this);
     }
 
     private void initBoard() {
@@ -49,10 +57,8 @@ public class ChessBoard extends JPanel {
         boardLayout[7][7] = new Rook(PieceColor.WHITE, spriteManager.get("white_rook"), 7, 7);
 
         // empty spaces
-        for(int i = 2; i < 6; ++i)
-        {
-            for(int j = 0; j < 8; ++j)
-            {
+        for (int i = 2; i < 6; ++i) {
+            for (int j = 0; j < 8; ++j) {
                 boardLayout[i][j] = new Empty();
             }
         }
@@ -81,14 +87,63 @@ public class ChessBoard extends JPanel {
         }
     }
 
-    private void drawPieces(Graphics g)
-    {
-        for(int row = 0; row < 8; ++row){
-            for(int col = 0; col < 8; ++col){
+    private void drawPieces(Graphics g) {
+        for (int row = 0; row < 8; ++row) {
+            for (int col = 0; col < 8; ++col) {
                 boardLayout[row][col].draw(g);
             }
         }
     }
 
+    // ######## Mouse Listener ########
+    @Override
+    public void mouseClicked(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        int[] coordinates = Constants.PointToGrid(e.getPoint());
+
+        Piece piece = boardLayout[coordinates[0]][coordinates[1]];
+        if(!piece.isEmpty()){
+            activeDragNDrop = true;
+            activeDragNDropPiece = piece;
+            System.out.println("picked up piece");
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if(activeDragNDrop){
+            activeDragNDrop = false;
+
+            activeDragNDropPiece.drop();
+            System.out.println("dropping piece");
+            repaint();
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if(activeDragNDrop){
+            activeDragNDropPiece.setCenterPos(e.getPoint());
+            repaint();
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
+    }
 }

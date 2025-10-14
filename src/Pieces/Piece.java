@@ -25,7 +25,7 @@ public abstract class Piece {
 
         drawSprite = false;
         int sl = Constants.squareLength;
-        centerPos = new Point(col * sl + sl/2, row * sl + sl/2);
+        centerPos = new Point(col * sl + sl / 2, row * sl + sl / 2);
     }
 
     protected Piece(boolean isEmpty) {
@@ -33,20 +33,33 @@ public abstract class Piece {
     }
 
     protected void setSquare(Point pos) {
-        if((pos.x < 0 || pos.x > Constants.windowDimension.height) ||
-                (pos.y < 0 || pos.y > Constants.windowDimension.height))
-        {
+
+    }
+
+    /**
+     * Method to finsh Drag and Drop proccess
+     */
+    public void drop(){
+        if ((centerPos.x < 0 || centerPos.x > Constants.windowDimension.height) ||
+                (centerPos.y < 0 || centerPos.y > Constants.windowDimension.height)) {
             return;
         }
 
-        row = pos.y / Constants.squareLength;
-        col = pos.x / Constants.squareLength;
+        System.out.println("previous: " + centerPos.x + " | " + centerPos.y);
+
+        row = centerPos.y / Constants.squareLength;
+        col = centerPos.x / Constants.squareLength;
+
+        System.out.println("after: " + row + " | " + col);
+
+        int sl = Constants.squareLength;
+        centerPos = new Point(col * sl + sl / 2, row * sl + sl / 2);
     }
 
     public void draw(Graphics g) {
         int sl = Constants.squareLength;
 //        g.drawImage(image, centerPos.x - image.getWidth(null), centerPos.y - image.getHeight(null), null);
-        g.drawImage(image, centerPos.x - sl/2, centerPos.y - sl/2, sl, sl, null);
+        g.drawImage(image, centerPos.x - sl / 2, centerPos.y - sl / 2, sl, sl, null);
     }
 
 
@@ -65,6 +78,14 @@ public abstract class Piece {
 
     public void setType(PieceType type) {
         this.type = type;
+    }
+
+    public boolean isEmpty() {
+        return isEmpty;
+    }
+
+    public void setCenterPos(Point centerPos) {
+        this.centerPos = centerPos;
     }
 
     // ######### Member Functions #########
