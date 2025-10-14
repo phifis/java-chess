@@ -1,6 +1,6 @@
 package Pieces;
 
-import constants.Constants;
+import Constants.Constants;
 
 import java.awt.*;
 

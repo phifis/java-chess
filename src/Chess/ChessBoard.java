@@ -1,7 +1,11 @@
+package Chess;
+
 import javax.swing.*;
 import java.awt.*;
+
+import FileIO.SpriteManager;
 import Pieces.*;
-import constants.Constants;
+import Constants.Constants;
 
 public class ChessBoard extends JPanel {
     Dimension boardSize;

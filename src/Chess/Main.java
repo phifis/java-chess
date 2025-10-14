@@ -1,8 +1,9 @@
+package Chess;
 
 public class Main {
     public static void main(String[] args) {
 
         new ChessWindow();
-//        SwingUtilities.invokeLater(ChessWindow::new);
+//        SwingUtilities.invokeLater(Chess.ChessWindow::new);
     }
 }
