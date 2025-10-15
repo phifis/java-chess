@@ -12,6 +12,7 @@ public abstract class Piece {
     Image image;
     boolean drawSprite; // to prevent drawing while the piece is picked up by drag and drop
     Point centerPos; // the center position to draw the sprite
+    Point originalCenterPos; // the center pos at the start of the Drag and Drop Process to restore the piece
 
     int row;
     int col;
@@ -37,23 +38,22 @@ public abstract class Piece {
     }
 
     /**
-     * Method to finsh Drag and Drop proccess
+     * Method to finish Drag and Drop process
+     * @return true if the new position is valid otherwise false
      */
-    public void drop(){
-        if ((centerPos.x < 0 || centerPos.x > Constants.windowDimension.height) ||
-                (centerPos.y < 0 || centerPos.y > Constants.windowDimension.height)) {
-            return;
+    public boolean drop(Point p){
+        boolean status = false;
+        if ((p.x >= 0 && p.x <= Constants.windowDimension.height) &&
+                (p.y >= 0 && p.y <= Constants.windowDimension.height)) {
+            // placed at valid position, update grid coordinates
+            row = p.y / Constants.squareLength;
+            col = p.x / Constants.squareLength;
+            status = true;
         }
-
-        System.out.println("previous: " + centerPos.x + " | " + centerPos.y);
-
-        row = centerPos.y / Constants.squareLength;
-        col = centerPos.x / Constants.squareLength;
-
-        System.out.println("after: " + row + " | " + col);
 
         int sl = Constants.squareLength;
         centerPos = new Point(col * sl + sl / 2, row * sl + sl / 2);
+        return status;
     }
 
     public void draw(Graphics g) {
@@ -86,6 +86,19 @@ public abstract class Piece {
 
     public void setCenterPos(Point centerPos) {
         this.centerPos = centerPos;
+    }
+
+    public void setGridCoordinates(int row, int col){
+        this.row = row;
+        this.col = col;
+    }
+
+    /**
+     * update the center position according to the Grid coordinates saved in this piece
+     */
+    public void updateCenterPos(){
+        int sl = Constants.squareLength;
+        centerPos = new Point(col * sl + sl / 2, row * sl + sl / 2);
     }
 
     // ######### Member Functions #########

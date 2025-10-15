@@ -16,6 +16,7 @@ public class ChessBoard extends JPanel implements MouseListener, MouseMotionList
     Piece[][] boardLayout = new Piece[8][8];
     Piece activeDragNDropPiece;
     boolean activeDragNDrop = false;
+    int dragNDropStartRow, dragNDropStartCol;
 
     SpriteManager spriteManager;
 
@@ -106,20 +107,30 @@ public class ChessBoard extends JPanel implements MouseListener, MouseMotionList
         int[] coordinates = Constants.PointToGrid(e.getPoint());
 
         Piece piece = boardLayout[coordinates[0]][coordinates[1]];
-        if(!piece.isEmpty()){
+        if (!piece.isEmpty()) {
             activeDragNDrop = true;
             activeDragNDropPiece = piece;
-            System.out.println("picked up piece");
+            dragNDropStartCol = coordinates[1];
+            dragNDropStartRow = coordinates[0];
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(activeDragNDrop){
+        if (activeDragNDrop) {
             activeDragNDrop = false;
+            Point p = e.getPoint();
+            if ((p.x >= 0 && p.x <= Constants.windowDimension.height) &&
+                    (p.y >= 0 && p.y <= Constants.windowDimension.height)) {
+                // placed at valid position, update grid coordinates of the piece
+                int row = p.y / Constants.squareLength;
+                int col = p.x / Constants.squareLength;
+                activeDragNDropPiece.setGridCoordinates(row, col);
+                boardLayout[row][col] = activeDragNDropPiece;
+                boardLayout[dragNDropStartRow][dragNDropStartCol] = new Empty();
+            }
 
-            activeDragNDropPiece.drop();
-            System.out.println("dropping piece");
+            activeDragNDropPiece.updateCenterPos();
             repaint();
         }
     }
@@ -136,7 +147,7 @@ public class ChessBoard extends JPanel implements MouseListener, MouseMotionList
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if(activeDragNDrop){
+        if (activeDragNDrop) {
             activeDragNDropPiece.setCenterPos(e.getPoint());
             repaint();
         }
